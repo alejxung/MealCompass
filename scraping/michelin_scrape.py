@@ -75,6 +75,8 @@ for p in range(pages):
     datas.append(data)
     driver.back()
     time.sleep(1.5)
+    print(name) #
+  print(f'{p+1}/{pages} done')
 
 df = pd.DataFrame(datas)
-df.to_csv('./scraping/data/michelin.csv')
+df.to_csv('./scraping/data/michelin-new.csv', index=False)

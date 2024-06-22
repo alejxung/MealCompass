@@ -23,13 +23,13 @@ for p in range(TOTAL_PAGES):
       'parking': chunk[i]['statusInfo']['parking'],
       'businessHours': chunk[i]['statusInfo']['businessHours'],
       'dayOff': chunk[i]['defaultInfo']['dayOff'],
-      'menu': chunk[i]['statusInfo']['menu'],
+      'menu': chunk[i]['statusInfo']['menu'].strip(),
       'priceRange': chunk[i]['statusInfo']['priceRange'],
-      'review': chunk[i]['review']['review'],
+      'review': chunk[i]['review']['review'].strip(),
       'ribbonType': chunk[i]['headerInfo']['ribbonType'],
     }
     datas.append(data)
-  print(f'{p+1}/{TOTAL_PAGES}')
+  print(f'{p+1}/{TOTAL_PAGES} done')
 
 df = pd.DataFrame(datas)
-df.to_csv('./scraping/data/bluer.csv')
+df.to_csv('./scraping/data/bluer.csv', index=False)
