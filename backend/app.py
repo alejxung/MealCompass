@@ -3,6 +3,7 @@ from flask_cors import CORS
 import pandas as pd
 import json
 import ast
+from math import radians, cos, sin, sqrt, atan2
 
 app = Flask(__name__)
 CORS(app)
@@ -42,6 +43,16 @@ def get_unique_values(df, column):
             if cleaned_item:
                 unique_values.add(cleaned_item)
     return sorted(unique_values)
+
+def haversine(lat1, lon1, lat2, lon2):
+    R = 6371.0  # Earth radius in kilometers
+    lat1, lon1, lat2, lon2 = map(radians, [lat1, lon1, lat2, lon2])
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+    a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+    distance = R * c
+    return distance
 
 @app.route('/api/restaurants', methods=['GET'])
 def get_restaurants():
@@ -92,18 +103,18 @@ def search_restaurant():
     price = [pr.strip() for pr in request.args.get('price', '').split(',') if pr.strip()]
     ribbon_types = [ribbon.strip().lower() for ribbon in request.args.get('ribbonType', '').split(',') if ribbon.strip()]
     michelin_types = [michelin.strip().lower() for michelin in request.args.get('michelinType', '').split(',') if michelin.strip()]
+    user_lat = float(request.args.get('latitude', '0'))
+    user_lon = float(request.args.get('longitude', '0'))
     
     data = load_data('restaurants.csv')
 
     if name:
         data = data[data['name'].str.contains(name, case=False, na=False)]
     if category:
-        # Convert category strings to lists of strings
         data['category'] = data['category'].apply(lambda x: ast.literal_eval(x) if pd.notna(x) else [])
         category_filter = data['category'].apply(lambda x: any(cat in x for cat in category))
         data = data[category_filter]
     if services:
-        # Convert services strings to lists of strings
         data['services'] = data['services'].apply(lambda x: ast.literal_eval(x) if pd.notna(x) else [])
         services_filter = data['services'].apply(lambda x: any(serv in x for serv in services))
         data = data[services_filter]
@@ -117,13 +128,17 @@ def search_restaurant():
     if michelin_types:
         michelin_filter = data['michelinType'].apply(lambda x: any(mt in x.lower() for mt in michelin_types))
         data = data[michelin_filter]
-    
+
+    if user_lat and user_lon:
+        data['distance'] = data.apply(lambda row: haversine(user_lat, user_lon, row['latitude'], row['longitude']), axis=1)
+        data = data.sort_values('distance')
+
     result = data.to_dict(orient='records')
-    
+
     return app.response_class(
         response=json.dumps(result, ensure_ascii=False),
         mimetype='application/json'
     )
-
+    
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

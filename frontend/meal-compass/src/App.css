@@ -1,11 +1,272 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
+@import "bootstrap-icons/font/bootstrap-icons.css";
 
 button.selected {
   background-color: #007bff;
   color: #fff;
+}
+
+/* CSS */
+li,
+ol,
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+input,
+label,
+select,
+button,
+textarea {
+  margin: 0px;
+  border: 0px;
+  padding: 0px;
+  appearance: none;
+  background-color: transparent;
+}
+
+.container {
+  font-family: "Apple SD Gothic Neo", "Apple SD Gothic", notosanskr,
+    "Malgun Gothic", "맑은 고딕", Dotum, 돋움, sans-serif;
+  display: flex;
+  height: 100vh;
+}
+
+header {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  height: 100%;
+  background-color: white;
+  box-sizing: border-box;
+  width: 63px;
+  border-right: 1px solid rgba(0, 0, 0, 0.15);
+  /* z-index: auto; */
+}
+
+.logo-box {
+  display: flex;
+  flex: 0 0 auto;
+  justify-content: center;
+  align-items: center;
+  height: 76px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  box-sizing: border-box;
+}
+
+.navbar {
+  min-height: 1px;
+  flex: 1 1 0%;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.list-navbar {
+  overflow: hidden;
+  max-width: 390px;
+  height: 100%;
+}
+
+.list-navbar:hover {
+  overflow-y: auto;
+}
+
+.btn-navbar {
+  background-color: white;
+  border: none;
+  display: block;
+  position: relative;
+  padding: 13px 1px 11px 0px;
+  text-align: center;
+  width: 100%;
+}
+
+button {
+  cursor: pointer;
+}
+
+.navbar-text {
+  display: block;
+  font-size: 12px;
+}
+
+.user {
+  position: relative;
+  display: flex;
+  flex: 0 0 76px;
+  justify-content: center;
+  align-items: center;
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.app {
+  flex: 1 1 auto;
+  overflow-y: auto;
+}
+
+#toggle {
+  height: 100%;
+  display: flex;
+  position: relative;
+  top: 0px;
+  bottom: 0px;
+  max-width: 390px;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 5px 0px,
+    rgba(0, 0, 0, 0.1) 5px 0px 15px 0px;
+}
+
+.search-component {
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.search-section {
+  width: 390px;
+  padding: 15px 25px;
+}
+
+.search-bar {
+  position: relative;
+  height: 46px;
+  padding-left: 45px;
+  border: 2px solid #4f5f3f;
+  border-radius: 5px;
+}
+
+.btn-search {
+  overflow: hidden;
+  display: inline-block;
+  /* font-size: 1px; */
+  /* line-height: 1px; */
+  /* color: transparent; */
+  vertical-align: top;
+  position: absolute;
+  /* background-image: url(/assets/search.png);
+  background-size: 129px 112px;
+  background-position: -57px 0px;
+  width: 25px;
+  height: 24px;
+  mask-image: none; */
+  top: 9px;
+  left: 15px;
+}
+.search-input {
+  position: relative;
+  display: block;
+  width: 100%;
+  font-size: 16px;
+  height: 42px;
+  letter-spacing: -0.2px;
+  outline: none;
+  padding-right: 43px;
+}
+.btn-clear {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  width: 43px;
+  background: white;
+  border-radius: 0px 5px 5px 0px;
+  font-size: 1px;
+  line-height: 1px;
+}
+.btn-clear::before {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  width: 1px;
+  height: 20px;
+  margin: auto;
+  background: rgb(236, 240, 242);
+  content: "";
+}
+.btn-clear::after {
+  overflow: hidden;
+  display: inline-block;
+  font-size: 1px;
+  line-height: 1px;
+  color: transparent;
+  vertical-align: top;
+  background-image: url(/assets/search.png);
+  background-size: 129px 112px;
+  background-position: -64px -96px;
+  width: 14px;
+  height: 14px;
+  mask-image: none;
+  content: "";
+}
+
+.tag-section {
+  padding: 0 25px 10px 25px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  max-height: 250px;
+}
+
+.result-section {
+  height: 100%;
+  padding: 0 25px;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.tag-cat {
+  display: flex;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+}
+
+.tag {
+  color: gray;
+  font-size: 14px;
+  height: 30px;
+  margin-top: 8px;
+  margin-right: 6px;
+  padding: 0 11px;
+  border: solid gray 1px;
+  border-radius: 18px;
+}
+
+.toggle-bar {
+  background-color: bisque;
+  display: flex;
+  justify-content: center;
+  padding: 3px;
+}
+
+.map {
+  /* background-color: rgb(228, 255, 255); */
+  width: 100%;
+  height: 100%;
+  /* z-index: -1; */
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+.toggle-open {
+  transform: translateX(0);
+  transition: all 0.5s;
+}
+
+.toggle-close {
+  transform: translateX(-100%);
+  transition: all 0.5s;
 }

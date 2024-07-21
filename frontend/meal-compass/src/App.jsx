@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./App.css";
+import Map from "./Map";
 
 function App() {
   const [query, setQuery] = useState("");
@@ -21,6 +22,7 @@ function App() {
     ribbonType: [],
     michelinType: [],
   });
+  const [location, setLocation] = useState({ latitude: 0, longitude: 0 });
 
   useEffect(() => {
     const fetchFilterOptions = async () => {
@@ -34,6 +36,18 @@ function App() {
       }
     };
     fetchFilterOptions();
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocation({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
+      },
+      (error) => {
+        console.error("Error fetching location", error);
+      }
+    );
   }, []);
 
   const handleFilterChange = (type, value) => {
@@ -63,6 +77,8 @@ function App() {
             price: filters.price.join(","),
             ribbonType: filters.ribbonType.join(","),
             michelinType: filters.michelinType.join(","),
+            latitude: location.latitude,
+            longitude: location.longitude,
           },
         }
       );
@@ -74,103 +90,190 @@ function App() {
   };
 
   return (
-    <div>
-      <h1>Restaurant Search</h1>
-      <input
-        type="text"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search for a restaurant"
-      />
-      <button onClick={searchRestaurant}>Search</button>
-
-      <div>
-        <h4>Category</h4>
-        {filterOptions.category.map((category) => (
-          <button
-            key={category}
-            onClick={() => handleFilterChange("category", category)}
-            className={filters.category.includes(category) ? "selected" : ""}
-          >
-            {category}
-          </button>
-        ))}
+    <>
+      <div className="container">
+        <div className="map">
+          <Map center={location} locations={results} />
+        </div>
+        <header id="header">
+          <div className="logo-box">
+            <i className="bi bi-compass-fill"></i> {/* Logo icon */}
+          </div>
+          <nav className="navbar">
+            <ul className="list-navbar">
+              <li className="search">
+                <button type="button" className="btn-navbar">
+                  <i className="bi bi-search"></i> {/* Search icon */}
+                  <span className="navbar-text"> Search </span>
+                </button>
+              </li>
+              <li className="directions">
+                <button type="button" className="btn-navbar">
+                  <i className="bi bi-arrow-right"></i> {/* Directions icon */}
+                  <span className="navbar-text"> Directions </span>
+                </button>
+              </li>
+              <li className="favorites">
+                <button type="button" className="btn-navbar">
+                  <i className="bi bi-heart"></i> {/* Favorites icon */}
+                  <span className="navbar-text"> Favorites </span>
+                </button>
+              </li>
+              <li className="bus">
+                <button type="button" className="btn-navbar">
+                  <i className="bi bi-bus-front"></i> {/* Bus icon */}
+                  <span className="navbar-text"> Bus </span>
+                </button>
+              </li>
+              <li className="subway">
+                <button type="button" className="btn-navbar">
+                  <i className="bi bi-train-front"></i> {/* Subway icon */}
+                  <span className="navbar-text"> Subway </span>
+                </button>
+              </li>
+            </ul>
+          </nav>
+          <div className="user">User</div>
+        </header>
+        <div className="app">
+          <div id="toggle" className="toggle-open">
+            <div className="search-component">
+              <div className="search-section">
+                <div className="search-bar">
+                  <button
+                    type="button"
+                    onClick={searchRestaurant}
+                    className="btn-search"
+                  >
+                    🔍
+                  </button>
+                  <input
+                    type="text"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="Search for a restaurant"
+                    className="search-input"
+                  />
+                  <button type="button" className="btn-clear"></button>
+                </div>
+              </div>
+              <div className="tag-section">
+                {/* <h4>Category</h4>
+                <div className="tag-cat">
+                  {filterOptions.category.map((category) => (
+                    <button
+                      key={category}
+                      onClick={() => handleFilterChange("category", category)}
+                      className={`tag ${
+                        filters.category.includes(category) ? "selected" : ""
+                      }`}
+                    >
+                      {category}
+                    </button>
+                  ))}
+                </div> */}
+                <h4>Ribbon Type</h4>
+                <div className="tag-cat">
+                  {filterOptions.ribbonType.map((ribbon) => (
+                    <button
+                      key={ribbon}
+                      onClick={() => handleFilterChange("ribbonType", ribbon)}
+                      className={`tag
+                        ${
+                          filters.ribbonType.includes(ribbon) ? "selected" : ""
+                        }`}
+                    >
+                      {ribbon}
+                    </button>
+                  ))}
+                </div>
+                <h4>Michelin Type</h4>
+                <div className="tag-cat">
+                  {filterOptions.michelinType.map((michelin) => (
+                    <button
+                      key={michelin}
+                      onClick={() =>
+                        handleFilterChange("michelinType", michelin)
+                      }
+                      className={`tag
+                        ${
+                          filters.michelinType.includes(michelin)
+                            ? "selected"
+                            : ""
+                        }`}
+                    >
+                      {michelin}
+                    </button>
+                  ))}
+                </div>
+                <h4>Price</h4>
+                <div className="tag-cat">
+                  {filterOptions.price.map((price) => (
+                    <button
+                      key={price}
+                      onClick={() => handleFilterChange("price", price)}
+                      className={`tag
+                        ${filters.price.includes(price) ? "selected" : ""}`}
+                    >
+                      {price}
+                    </button>
+                  ))}
+                </div>
+                <h4>Services</h4>
+                <div className="tag-cat">
+                  {filterOptions.services.map((service) => (
+                    <button
+                      key={service}
+                      onClick={() => handleFilterChange("services", service)}
+                      className={`tag ${
+                        filters.services.includes(service) ? "selected" : ""
+                      }`}
+                    >
+                      {service}
+                    </button>
+                  ))}
+                </div>
+                <h4>Parking</h4>
+                <div className="tag-cat">
+                  {filterOptions.parking.map((parking) => (
+                    <button
+                      key={parking}
+                      onClick={() => handleFilterChange("parking", parking)}
+                      className={`tag 
+                        ${filters.parking.includes(parking) ? "selected" : ""}`}
+                    >
+                      {parking}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="result-section">
+                <ul>
+                  {results.length > 0 ? (
+                    results.map((restaurant, index) => (
+                      <li key={index}>
+                        {index + 1}. {restaurant.name}
+                      </li>
+                    ))
+                  ) : (
+                    <li>No results found</li>
+                  )}
+                </ul>
+              </div>
+            </div>
+            <div className="toggle-bar">
+              <button
+                type="button"
+                className="btn-toggle"
+                // onClick={toggle()}
+              >
+                {">"}
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
-      <div>
-        <h4>Services</h4>
-        {filterOptions.services.map((service) => (
-          <button
-            key={service}
-            onClick={() => handleFilterChange("services", service)}
-            className={filters.services.includes(service) ? "selected" : ""}
-          >
-            {service}
-          </button>
-        ))}
-      </div>
-      <div>
-        <h4>Parking</h4>
-        {filterOptions.parking.map((parking) => (
-          <button
-            key={parking}
-            onClick={() => handleFilterChange("parking", parking)}
-            className={filters.parking.includes(parking) ? "selected" : ""}
-          >
-            {parking}
-          </button>
-        ))}
-      </div>
-      <div>
-        <h4>Price</h4>
-        {filterOptions.price.map((price) => (
-          <button
-            key={price}
-            onClick={() => handleFilterChange("price", price)}
-            className={filters.price.includes(price) ? "selected" : ""}
-          >
-            {price}
-          </button>
-        ))}
-      </div>
-      <div>
-        <h4>Ribbon Type</h4>
-        {filterOptions.ribbonType.map((ribbon) => (
-          <button
-            key={ribbon}
-            onClick={() => handleFilterChange("ribbonType", ribbon)}
-            className={filters.ribbonType.includes(ribbon) ? "selected" : ""}
-          >
-            {ribbon}
-          </button>
-        ))}
-      </div>
-      <div>
-        <h4>Michelin Type</h4>
-        {filterOptions.michelinType.map((michelin) => (
-          <button
-            key={michelin}
-            onClick={() => handleFilterChange("michelinType", michelin)}
-            className={
-              filters.michelinType.includes(michelin) ? "selected" : ""
-            }
-          >
-            {michelin}
-          </button>
-        ))}
-      </div>
-
-      <ul>
-        {results.length > 0 ? (
-          results.map((restaurant, index) => (
-            <li key={index}>
-              {index + 1}. {restaurant.name}
-            </li>
-          ))
-        ) : (
-          <li>No results found</li>
-        )}
-      </ul>
-    </div>
+    </>
   );
 }
 
